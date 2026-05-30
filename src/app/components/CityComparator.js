@@ -1,20 +1,33 @@
 "use client";
 
-import { useState } from "react";
 import { CITIES, WEIGHTS } from "../data/cities";
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Legend } from "recharts";
+import { useState, useEffect } from "react";
 
 const COLORS = ["#185FA5", "#0F6E56", "#BA7517", "#993556"];
 
-function calcScore(city, weights) {
+function calcScore(city, weights, liveWeather) {
   const total = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
-  const sum = WEIGHTS.reduce((a, w) => a + city.metrics[w.key] * weights[w.key], 0);
+  const sum = WEIGHTS.reduce((a, w) => {
+    const val = w.key === "weather" && liveWeather[city.id]
+      ? liveWeather[city.id].score
+      : city.metrics[w.key];
+    return a + val * weights[w.key];
+  }, 0);
   return Math.round(sum / total);
 }
 
 export default function CityComparator() {
   const [selected, setSelected] = useState(["ban", "hyd", "pun", "mum"]);
   const [weights, setWeights] = useState({ cost: 1, air: 1, jobs: 1, weather: 1, internet: 1 });
+
+  const [liveWeather, setLiveWeather] = useState({});
+
+useEffect(() => {
+  fetch("/api/weather")
+    .then((r) => r.json())
+    .then((data) => setLiveWeather(data));
+}, []);
 
   function toggleCity(id) {
     if (selected.includes(id)) {
@@ -26,7 +39,7 @@ export default function CityComparator() {
   }
 
   const selectedCities = CITIES.filter((c) => selected.includes(c.id))
-    .sort((a, b) => calcScore(b, weights) - calcScore(a, weights));
+    .sort((a, b) => calcScore(b, weights, liveWeather) - calcScore(a, weights, liveWeather));
 
   const radarData = WEIGHTS.map((w) => {
     const entry = { metric: w.label };
@@ -72,7 +85,7 @@ export default function CityComparator() {
 
       {topCity && (
         <div className="mb-6 bg-blue-50 rounded-lg px-4 py-3 text-sm text-blue-800">
-          <strong>{topCity.name}</strong> is your best match with a score of <strong>{calcScore(topCity, weights)}/100</strong> based on your priorities.
+          <strong>{topCity.name}</strong> is your best match with a score of <strong>{calcScore(topCity, weights, liveWeather)}/100</strong> based on your priorities.
         </div>
       )}
 
@@ -82,16 +95,21 @@ export default function CityComparator() {
             {i === 0 && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded mb-2 inline-block">Best match</span>}
             <h3 className="font-medium text-gray-900">{c.name}</h3>
             <p className="text-xs text-gray-400 mb-2">{c.state}</p>
-            <p className="text-3xl font-medium text-blue-600 mb-3">{calcScore(c, weights)}<span className="text-sm text-gray-400">/100</span></p>
+            <p className="text-3xl font-medium text-blue-600 mb-3">{calcScore(c, weights, liveWeather)}<span className="text-sm text-gray-400">/100</span></p>
             {WEIGHTS.map((w) => (
               <div key={w.key} className="mb-1">
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>{w.label}</span><span>{c.metrics[w.key]}</span>
-                </div>
-                <div className="h-1 bg-gray-100 rounded">
-                  <div className="h-1 bg-blue-400 rounded" style={{ width: `${c.metrics[w.key]}%` }} />
-                </div>
+               <div className="flex justify-between text-xs text-gray-500">
+                <span>{w.label}</span>
+                <span>
+                   {w.key === "weather" && liveWeather[c.id]
+                      ? `${liveWeather[c.id].score} (${liveWeather[c.id].temp}°C)`
+                     : c.metrics[w.key]}
+                 </span>
               </div>
+              <div className="h-1 bg-gray-100 rounded">
+                <div className="h-1 bg-blue-400 rounded" style={{ width: `${c.metrics[w.key]}%` }} />
+              </div>
+            </div>
             ))}
             <p className="text-xs text-gray-400 mt-3 leading-relaxed">{c.note}</p>
           </div>
