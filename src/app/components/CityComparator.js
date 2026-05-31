@@ -7,6 +7,7 @@ import CityQuiz from "./CityQuiz";
 import { useRouter } from "next/navigation";
 import CostCalculator from "./CostCalculator";
 import CityAdvisor from "./CityAdvisor";
+import RelocatorsMap from "./RelocatorsMap";
 
 const COLORS = ["#f5c518", "#e8a020", "#ffd700", "#c9a84c"];
 
@@ -48,6 +49,7 @@ export default function CityComparator() {
   const router = useRouter();
   const [showCalc, setShowCalc] = useState(false);
   const [showAdvisor, setShowAdvisor] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   
 
   useEffect(() => {
@@ -125,6 +127,12 @@ export default function CityComparator() {
           whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
           style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 50, border: "1px solid rgba(245,197,24,0.3)", background: "transparent", color: "#f5c518", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: "1.25rem" }}>
           🧠 AI city advisor
+        </motion.button>
+
+        <motion.button onClick={() => setShowMap(true)}
+          whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
+          style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 50, border: "1px solid rgba(245,197,24,0.3)", background: "transparent", color: "#f5c518", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: "1.25rem" }}>
+          🗺️ Relocators map
         </motion.button>
 
         {/* City Selector */}
@@ -283,6 +291,7 @@ export default function CityComparator() {
           {showQuiz && <CityQuiz onClose={() => setShowQuiz(false)} />}
           {showCalc && <CostCalculator onClose={() => setShowCalc(false)} />}    
           {showAdvisor && <CityAdvisor onClose={() => setShowAdvisor(false)} />}  
+          {showMap && <RelocatorsMap onClose={() => setShowMap(false)} />}
         </AnimatePresence>
       </div>
     </div>
