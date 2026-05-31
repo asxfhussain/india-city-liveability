@@ -4,21 +4,21 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CITY_POSITIONS = {
-  del:   { x: 42, y: 22, name: "Delhi" },
-  mum:   { x: 28, y: 52, name: "Mumbai" },
-  ban:   { x: 38, y: 72, name: "Bengaluru" },
-  hyd:   { x: 42, y: 62, name: "Hyderabad" },
-  che:   { x: 48, y: 75, name: "Chennai" },
-  kol:   { x: 68, y: 38, name: "Kolkata" },
-  pun:   { x: 32, y: 50, name: "Pune" },
-  ahm:   { x: 25, y: 38, name: "Ahmedabad" },
-  jai:   { x: 35, y: 28, name: "Jaipur" },
-  chan:  { x: 40, y: 16, name: "Chandigarh" },
-  kochi: { x: 36, y: 82, name: "Kochi" },
-  ind:   { x: 38, y: 42, name: "Indore" },
-  sur:   { x: 26, y: 44, name: "Surat" },
-  nag:   { x: 46, y: 48, name: "Nagpur" },
-  vij:   { x: 52, y: 66, name: "Vijayawada" },
+  del:   { x: 48, y: 22, name: "Delhi" },
+  mum:   { x: 33, y: 52, name: "Mumbai" },
+  ban:   { x: 42, y: 68, name: "Bengaluru" },
+  hyd:   { x: 47, y: 57, name: "Hyderabad" },
+  che:   { x: 52, y: 68, name: "Chennai" },
+  kol:   { x: 72, y: 40, name: "Kolkata" },
+  pun:   { x: 36, y: 50, name: "Pune" },
+  ahm:   { x: 30, y: 36, name: "Ahmedabad" },
+  jai:   { x: 43, y: 26, name: "Jaipur" },
+  chan:  { x: 46, y: 16, name: "Chandigarh" },
+  kochi: { x: 40, y: 76, name: "Kochi" },
+  ind:   { x: 41, y: 40, name: "Indore" },
+  sur:   { x: 31, y: 44, name: "Surat" },
+  nag:   { x: 52, y: 46, name: "Nagpur" },
+  vij:   { x: 57, y: 62, name: "Vijayawada" },
 };
 
 const FLOWS = [
@@ -61,7 +61,7 @@ const TOP_SOURCES = [...Object.keys(CITY_POSITIONS)]
 
 export default function RelocatorsMap({ onClose }) {
   const [selected, setSelected] = useState(null);
-  const [tab, setTab] = useState("map");
+  const [tab, setTab] = useState("flows");
 
   const selectedFlows = selected
     ? FLOWS.filter(f => f.from === selected || f.to === selected)
@@ -88,7 +88,7 @@ export default function RelocatorsMap({ onClose }) {
 
         {/* Tabs */}
         <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-          {["map", "flows", "rankings"].map(t => (
+          {["flows", "rankings"].map(t => (
             <button key={t} onClick={() => setTab(t)}
               style={{ padding: "6px 16px", borderRadius: 50, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, textTransform: "capitalize",
                 background: tab === t ? "linear-gradient(135deg, #f5c518, #e8a020)" : "rgba(255,255,255,0.07)",
@@ -100,72 +100,7 @@ export default function RelocatorsMap({ onClose }) {
 
         <AnimatePresence mode="wait">
 
-          {/* MAP TAB */}
-          {tab === "map" && (
-            <motion.div key="map" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 12 }}>Click a city to see its migration flows</p>
-              <div style={{ position: "relative", width: "100%", paddingBottom: "75%", background: "rgba(255,255,255,0.03)", borderRadius: 16, border: "1px solid rgba(255,255,255,0.07)", overflow: "hidden" }}>
-                <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} viewBox="0 0 100 100">
-
-                  {/* Flow arrows */}
-                  {(selected ? selectedFlows : FLOWS.slice(0, 10)).map((f, i) => {
-                    const from = CITY_POSITIONS[f.from];
-                    const to = CITY_POSITIONS[f.to];
-                    const isActive = selected && (f.from === selected || f.to === selected);
-                    const opacity = selected ? (isActive ? 0.8 : 0.1) : 0.3;
-                    const color = f.to === selected ? "#f5c518" : f.from === selected ? "#e8a020" : "#f5c518";
-                    return (
-                      <g key={i}>
-                        <line x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-                          stroke={color} strokeWidth={selected && isActive ? 0.6 : 0.3}
-                          strokeOpacity={opacity} strokeDasharray="2,1" />
-                        <circle cx={to.x} cy={to.y} r={0.8} fill={color} fillOpacity={opacity} />
-                      </g>
-                    );
-                  })}
-
-                  {/* City nodes */}
-                  {Object.entries(CITY_POSITIONS).map(([id, pos]) => {
-                    const inflow = getInflow(id);
-                    const isSelected = selected === id;
-                    const size = 1.5 + (inflow / 50000) * 2;
-                    return (
-                      <g key={id} onClick={() => setSelected(selected === id ? null : id)} style={{ cursor: "pointer" }}>
-                        <circle cx={pos.x} cy={pos.y} r={size + 1} fill={isSelected ? "rgba(245,197,24,0.2)" : "transparent"} />
-                        <circle cx={pos.x} cy={pos.y} r={size}
-                          fill={isSelected ? "#f5c518" : "rgba(245,197,24,0.6)"}
-                          stroke={isSelected ? "#fff" : "rgba(255,255,255,0.3)"}
-                          strokeWidth={0.5} />
-                        <text x={pos.x} y={pos.y + size + 2.5} textAnchor="middle"
-                          fontSize={2.2} fill="rgba(255,255,255,0.7)">{pos.name}</text>
-                      </g>
-                    );
-                  })}
-                </svg>
-              </div>
-
-              {/* Selected city info */}
-              {selected && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  style={{ marginTop: 16, background: "rgba(245,197,24,0.1)", borderRadius: 14, padding: "1rem", border: "1px solid rgba(245,197,24,0.2)" }}>
-                  <h3 style={{ color: "#f5c518", fontSize: 16, fontWeight: 700, margin: "0 0 8px" }}>{CITY_POSITIONS[selected].name}</h3>
-                  <div style={{ display: "flex", gap: 20, marginBottom: 12 }}>
-                    <div><span style={{ fontSize: 20, fontWeight: 800, color: "#34d399" }}>{formatNum(cityInflow)}</span><div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>moving in/year</div></div>
-                    <div><span style={{ fontSize: 20, fontWeight: 800, color: "#f87171" }}>{formatNum(cityOutflow)}</span><div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>moving out/year</div></div>
-                    <div><span style={{ fontSize: 20, fontWeight: 800, color: cityInflow > cityOutflow ? "#34d399" : "#f87171" }}>{cityInflow > cityOutflow ? "+" : ""}{formatNum(cityInflow - cityOutflow)}</span><div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>net flow</div></div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {selectedFlows.map((f, i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "rgba(255,255,255,0.6)" }}>
-                        <span>{f.from === selected ? "→" : "←"} {CITY_POSITIONS[f.from === selected ? f.to : f.from].name} <span style={{ color: "rgba(255,255,255,0.3)" }}>({f.reason})</span></span>
-                        <span style={{ color: f.to === selected ? "#34d399" : "#f87171", fontWeight: 600 }}>{f.to === selected ? "+" : "-"}{formatNum(f.count)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </motion.div>
-          )}
+         
 
           {/* FLOWS TAB */}
           {tab === "flows" && (
