@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CityQuiz from "./CityQuiz";
 import { useRouter } from "next/navigation";
+import CostCalculator from "./CostCalculator";
 
 const COLORS = ["#f5c518", "#e8a020", "#ffd700", "#c9a84c"];
 
@@ -44,6 +45,7 @@ export default function CityComparator() {
   const [loaded, setLoaded] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const router = useRouter();
+  const [showCalc, setShowCalc] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -108,6 +110,12 @@ export default function CityComparator() {
             whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
             style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 50, border: "none", background: "linear-gradient(135deg, #f5c518, #e8a020)", color: "#0a0a1a", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: "1.25rem", boxShadow: "0 4px 20px rgba(245,197,24,0.35)" }}>
             ✨ Find my ideal city
+        </motion.button>
+
+        <motion.button onClick={() => setShowCalc(true)}
+            whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
+            style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 50, border: "1px solid rgba(245,197,24,0.3)", background: "transparent", color: "#f5c518", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: "1.25rem" }}>
+            💸 Cost calculator
         </motion.button>
 
         {/* City Selector */}
@@ -261,6 +269,7 @@ export default function CityComparator() {
         </p>
         <AnimatePresence>
           {showQuiz && <CityQuiz onClose={() => setShowQuiz(false)} />}
+          {showCalc && <CostCalculator onClose={() => setShowCalc(false)} />}    
         </AnimatePresence>
       </div>
     </div>
