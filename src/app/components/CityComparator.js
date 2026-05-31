@@ -40,7 +40,7 @@ function AnimatedNumber({ value }) {
 
 export default function CityComparator() {
   const [selected, setSelected] = useState(["ban", "hyd", "pun", "mum"]);
-  const [weights, setWeights] = useState({ cost: 1, air: 1, jobs: 1, weather: 1, internet: 1 });
+  const [weights, setWeights] = useState({ cost: 1, air: 1, jobs: 1, weather: 1, internet: 1, traffic: 1, safety: 1, food: 1 });
   const [liveWeather, setLiveWeather] = useState({});
   const [liveAqi, setLiveAqi] = useState({});
   const [loaded, setLoaded] = useState(false);
@@ -48,6 +48,7 @@ export default function CityComparator() {
   const router = useRouter();
   const [showCalc, setShowCalc] = useState(false);
   const [showAdvisor, setShowAdvisor] = useState(false);
+  
 
   useEffect(() => {
     Promise.all([
@@ -230,6 +231,9 @@ export default function CityComparator() {
                     if (key === "jobs") return val >= 85 ? "Excellent" : val >= 70 ? "Good" : val >= 55 ? "Moderate" : "Limited";
                     if (key === "weather") return val >= 80 ? "Pleasant" : val >= 60 ? "Moderate" : val >= 40 ? "Harsh" : "Very Harsh";
                     if (key === "internet") return val >= 80 ? "Fast" : val >= 65 ? "Good" : val >= 50 ? "Average" : "Slow";
+                    if (key === "traffic") return val >= 75 ? "Smooth" : val >= 55 ? "Moderate" : val >= 35 ? "Congested" : "Gridlock";
+                    if (key === "safety") return val >= 80 ? "Very Safe" : val >= 65 ? "Safe" : val >= 50 ? "Moderate" : "Caution";
+                    if (key === "food") return val >= 88 ? "World Class" : val >= 78 ? "Excellent" : val >= 68 ? "Good" : "Limited";
                   }
 
                   const label = w.key === "air" && liveAqi[c.id]
