@@ -10,7 +10,7 @@ import CityAdvisor from "./CityAdvisor";
 import RelocatorsMap from "./RelocatorsMap";
 import RoastMyCity from "./RoastMyCity";
 
-const COLORS = ["#f5c518", "#e8a020", "#ffd700", "#c9a84c"];
+const COLORS = ["#f5c518", "#22d3ee", "#f87171", "#a78bfa"];
 
 function calcScore(city, weights, liveWeather, liveAqi) {
   const total = Object.values(weights).reduce((a, b) => a + b, 0) || 1;
