@@ -92,8 +92,15 @@ cities.js              # City metrics data
 ---
 
 ## Screenshots
+<img width="1872" height="808" alt="image" src="https://github.com/user-attachments/assets/24a1ed36-29a2-434c-8fc5-59c0501ce152" />
 
-> Add screenshots here after taking them
+<img width="1886" height="970" alt="image" src="https://github.com/user-attachments/assets/ad472c04-b330-4647-9fa2-5eb96c6ba634" />
+
+<img width="1813" height="758" alt="image" src="https://github.com/user-attachments/assets/9ffe589b-984b-4184-ad69-40016f3fd83c" />
+
+<img width="1234" height="961" alt="image" src="https://github.com/user-attachments/assets/38e28079-3299-4277-9324-e2788e0111d4" />
+
+<img width="1890" height="967" alt="image" src="https://github.com/user-attachments/assets/460cd27d-8e48-4987-8594-0e6aa03a2400" />
 
 ---
 
