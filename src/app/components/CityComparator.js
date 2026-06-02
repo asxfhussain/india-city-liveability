@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import CostCalculator from "./CostCalculator";
 import CityAdvisor from "./CityAdvisor";
 import RelocatorsMap from "./RelocatorsMap";
+import RoastMyCity from "./RoastMyCity";
 
 const COLORS = ["#f5c518", "#e8a020", "#ffd700", "#c9a84c"];
 
@@ -50,6 +51,7 @@ export default function CityComparator() {
   const [showCalc, setShowCalc] = useState(false);
   const [showAdvisor, setShowAdvisor] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [showRoast, setShowRoast] = useState(false);
   
 
   useEffect(() => {
@@ -133,6 +135,12 @@ export default function CityComparator() {
           whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
           style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 50, border: "1px solid rgba(245,197,24,0.3)", background: "transparent", color: "#f5c518", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: "1.25rem" }}>
           🗺️ Relocators map
+        </motion.button>
+
+        <motion.button onClick={() => setShowRoast(true)}
+          whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
+          style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 22px", borderRadius: 50, border: "1px solid rgba(245,197,24,0.3)", background: "transparent", color: "#f5c518", fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: "1.25rem" }}>
+          🔥 Roast my city
         </motion.button>
 
         {/* City Selector */}
@@ -288,10 +296,11 @@ export default function CityComparator() {
           Live data from Open-Meteo & WAQI · Scores update on each load
         </p>
         <AnimatePresence>
-          {showQuiz && <CityQuiz onClose={() => setShowQuiz(false)} />}
-          {showCalc && <CostCalculator onClose={() => setShowCalc(false)} />}    
-          {showAdvisor && <CityAdvisor onClose={() => setShowAdvisor(false)} />}  
-          {showMap && <RelocatorsMap onClose={() => setShowMap(false)} />}
+          {showQuiz && <CityQuiz key="quiz" onClose={() => setShowQuiz(false)} />}
+          {showCalc && <CostCalculator key="calc" onClose={() => setShowCalc(false)} />}
+          {showAdvisor && <CityAdvisor key="advisor" onClose={() => setShowAdvisor(false)} />}
+          {showMap && <RelocatorsMap key="map" onClose={() => setShowMap(false)} />}
+          {showRoast && <RoastMyCity key="roast" onClose={() => setShowRoast(false)} />}
         </AnimatePresence>
       </div>
     </div>
